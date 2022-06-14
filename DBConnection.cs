@@ -1,11 +1,9 @@
-﻿using MySql.Data.MySqlClient;
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace PPE_Vallade
+﻿using System;
+using MySql.Data;
+using MySql.Data.MySqlClient;
+namespace PPE_Salons
 {
-    public class DBConnection
+    public  class DBConnection
     {
 
 
@@ -42,7 +40,7 @@ namespace PPE_Vallade
             return true;
         }
 
-
+        
         public void Close()
         {
             Connection.Close();

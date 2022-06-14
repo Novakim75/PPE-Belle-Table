@@ -1,37 +1,38 @@
 ﻿using System;
-using MySql.Data.MySqlClient;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows.Forms;
 
-
-namespace PPE_Vallade
+namespace PPE_Salons
 {
-    class Program
+    static class Program
     {
-        static void Main(string[] args)
+        /// <summary>
+        /// Point d'entrée principal de l'application.
+        /// </summary>
+        [STAThread]
+        static void Main()
         {
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
 
-            //Connnexion à la BDD
-             DBConnection dbCon = new DBConnection();
-            dbCon.Server = "127.0.0.1";
-            dbCon.DatabaseName = "ppe";
-            dbCon.UserName = "root";
-           dbCon.Password = Crypto.Decrypt("r7bmN7pqFWFZMyztVQ8FCA==");
-            if (dbCon.IsConnect())
+            Login MonFormLogin = new Login();//instancier le form de login
+
+            MonFormLogin.ShowDialog();//pour ouvrir le formulaire comme une modale
+            if (MonFormLogin.DialogResult == DialogResult.OK)//l'utilisateur peut se connecte
             {
-                //matricule nom
-                string query = "SELECT code_c, nom, prenom, mail, ville, telephone FROM participant";
-                var cmd = new MySqlCommand(query, dbCon.Connection);
-                var reader = cmd.ExecuteReader();
-                //Menu principal
-                int leChoix;
-                reader.Close();
-                do
-                {
-                    leChoix = Interface.MenuPrincipal();
-                    Interface.TraiterChoix(leChoix, dbCon, reader);
-                } while (leChoix != 4);
-                Console.ReadLine();
+               //On récupére les infos de l'utilisateur : ID, niveau
+            int NiveauUtilisateur = MonFormLogin.NiveauUtilisateur;
+            int  IdNomutilisateur = MonFormLogin.IdUtilisateur;
+                MonFormLogin.Close();//On ferme le login
+                Application.Run(new Form1(NiveauUtilisateur, IdNomutilisateur));//Lancer l'écran métier
+                //En foncton du niveau d'utilisateur, on ouvre un écran ou un autre
             }
-        }
+            else
+                MonFormLogin.Close();
+            MessageBox.Show("Au revoir");
 
+        }
     }
 }
